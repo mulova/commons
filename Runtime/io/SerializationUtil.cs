@@ -77,7 +77,7 @@ namespace mulova.unicore {
 			#if !UNITY_WEBGL || UNITY_EDITOR
 			BinarySerializer reader = new BinarySerializer(path, FileAccess.Read);
 			T obj = reader.Deserialize<T>();
-			reader.Close();
+			_ = reader.Close();
 			return obj;
 			#else
 			return null;

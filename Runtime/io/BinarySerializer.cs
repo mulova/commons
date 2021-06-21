@@ -112,8 +112,8 @@ namespace mulova.unicore
                 keys.Add (pair.Key);
                 values.Add (pair.Value);
             }
-            Serialize (keys.ToArray ());
-            Serialize (values.ToArray ());
+            _ = Serialize (keys.ToArray ());
+            _ = Serialize (values.ToArray ());
         }
 
         public T Deserialize<T> ()
@@ -205,7 +205,7 @@ namespace mulova.unicore
 
         public void Dispose ()
         {
-            Close();
+            _ = Close();
         }
     }
 	
