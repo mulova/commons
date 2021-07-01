@@ -58,7 +58,10 @@ namespace mulova.unicore
                 var view = EditorUtil.sceneView;
                 view.size = size;
                 view.in2DMode = in2dMode;
-                view.rotation = rot;
+                if (!in2dMode)
+                {
+                    view.rotation = rot;
+                }
                 view.pivot = pivot;
                 view.orthographic = ortho;
             
