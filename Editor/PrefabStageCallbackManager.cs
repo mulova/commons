@@ -1,9 +1,17 @@
 ﻿using System.Collections.Generic;
+#if UNITY_2021_2_OR_NEWER
+using UnityEditor.SceneManagement;
+#else
 using UnityEditor.Experimental.SceneManagement;
+#endif
 using System;
 using System.Threading.Tasks;
 
+#if UNITY_2021_2_OR_NEWER
+namespace UnityEditor.SceneManagement
+#else
 namespace UnityEditor.Experimental.SceneManagement
+#endif
 {
     public class PrefabStageCallbackManager : IDisposable
     {
