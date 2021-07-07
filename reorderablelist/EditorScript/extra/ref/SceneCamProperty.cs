@@ -67,8 +67,11 @@ namespace mulova.unicore
             
                 if (!in2dMode)
                 {
+#if UNITY_2021_2_OR_NEWER
+#else
                     var svRot = view.GetFieldValue<object>("svRot");
                     ReflectionUtil.Invoke(svRot, "ViewFromNiceAngle", view, !in2dMode);
+#endif
                 }
 
                 if (ortho)
@@ -80,11 +83,11 @@ namespace mulova.unicore
                     view.camera.fieldOfView = fov;
                 }
                 view.isRotationLocked = rotationLocked;
-                #if UNITY_2018_1_OR_NEWER
+#if UNITY_2018_1_OR_NEWER
                 view.cameraMode = camMode;
-                #else
+#else
                 view.renderMode = camMode;
-                #endif
+#endif
             } else
             {
                 Debug.LogWarning("SceneCam is not initialized");
