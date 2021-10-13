@@ -222,7 +222,7 @@ namespace System.Ex
 			}
 		}
 
-        public static T[] FindAll<T>(this T[] arr, Predicate<T> condition)
+        public static List<T> FindAll<T>(this T[] arr, Predicate<T> condition)
         {
             if (arr == null)
             {
@@ -236,7 +236,7 @@ namespace System.Ex
                     filtered.Add(arr[i]);
                 }
             }
-            return filtered.ToArray();
+            return filtered;
         }
 
         public static int FindIndex<T>(this T[] arr, T val) {

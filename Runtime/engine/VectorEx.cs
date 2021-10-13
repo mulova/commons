@@ -41,7 +41,13 @@ namespace UnityEngine.Ex
                 && v1.z.ApproximatelyEquals(v2.z);
         }
 
-        public static bool Equals(this Vector3 v1, Vector3 v2, float tolerance)
+		public static bool ApproximatelyEquals(this Vector2 v1, Vector2 v2)
+		{
+			return v1.x.ApproximatelyEquals(v2.x)
+				&& v1.y.ApproximatelyEquals(v2.y);
+		}
+
+		public static bool Equals(this Vector3 v1, Vector3 v2, float tolerance)
         {
             return v1.x.Equals(v2.x, tolerance) && v1.y.Equals(v2.y, tolerance) && v1.z.Equals(v2.z, tolerance);
         }
