@@ -49,7 +49,7 @@ namespace mulova.unicore
 		public virtual void Remove() { }
         public abstract void OnChangePlayMode(PlayModeStateChange stateChange);
 		public abstract void OnChangeScene(string sceneName);
-		public abstract void OnSelected(bool sel);
+		public abstract void OnTabChange(bool sel);
 		/// <summary>
 		/// Called when the tab is activated
 		/// </summary>

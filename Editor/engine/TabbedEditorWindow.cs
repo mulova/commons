@@ -57,19 +57,26 @@ namespace mulova.unicore
 
         protected virtual void OnEnable() {
 			CreateTabs();
-			string tabName = EditorPrefs.GetString(GetWindowId());
-			if (!tabName.IsEmpty()) {
-				foreach (TabData t in tabs) {
-					if (tabName == t.tab.ToString()) {
-						selected = t;
-						break;
-					}
-				}
+            if (showAllTab)
+            {
+                tabs.ForEach(t => t.tab.OnTabChange(true));
+            } else
+            {
+			    string tabName = EditorPrefs.GetString(GetWindowId());
+			    if (!tabName.IsEmpty()) {
+				    foreach (TabData t in tabs) {
+					    if (tabName == t.tab.ToString()) {
+						    selected = t;
+						    break;
+					    }
+				    }
 
-			} else {
-				selected = tabs[0];
-			}
-			selected.tab.OnSelected(true);
+			    } else {
+				    selected = tabs[0];
+			    }
+			    selected.tab.OnTabChange(true);
+            }
+            OnSelectionChange();
             #if UNITY_2017_1_OR_NEWER
             EditorApplication.playModeStateChanged += ChangePlayMode;
             #else
@@ -104,7 +111,7 @@ namespace mulova.unicore
 			this.showAllTab = show;
 			foreach (TabData t in tabs)
 			{
-				t.tab.OnSelected(true);
+				t.tab.OnTabChange(true);
 			}
 		}
 
@@ -112,7 +119,13 @@ namespace mulova.unicore
 
 		protected virtual void OnSelectionChange() {
 			Repaint();
-			selected.tab.OnSelectionChange();
+            if (showAllTab)
+            {
+                tabs.ForEach(t => t.tab.OnSelectionChange());
+            } else
+            {
+			    selected.tab.OnSelectionChange();
+            }
         }
 
         private GenericMenu _contextMenu;
@@ -128,15 +141,22 @@ namespace mulova.unicore
             }
         }
 
+        protected virtual void OnHeaderGUI() { }
+
         protected void OnGUI() {
 			try {
                 _contextMenu = null;
+                OnHeaderGUI();
 				if (showAllTab) {
 					EditorGUILayout.BeginHorizontal();
 					for (int i=0; i<tabs.Count; ++i) {
 						EditorGUILayout.BeginVertical();
 						TabData t = tabs[i];
-						GUILayout.Label(t.tab.ToString(), EditorStyles.boldLabel);
+                        var tabName = t.tab.ToString();
+                        if (!string.IsNullOrWhiteSpace(tabName))
+                        {
+                            GUILayout.Label(tabName, EditorStyles.boldLabel);
+                        }
 						t.tab.OnHeaderGUI();
 						t.tab.ShowResult();
 						t.scrollPos = EditorGUILayout.BeginScrollView(t.scrollPos);
@@ -178,9 +198,9 @@ namespace mulova.unicore
                                 GUI.backgroundColor = inactiveTabBgColor;
                                 GUI.contentColor = inactiveTabContentColor;
                                 if (GUILayout.Button(t.tab.ToString(), EditorStyles.toolbarButton)) {
-                                    selected.tab.OnSelected(false);
+                                    selected.tab.OnTabChange(false);
                                     selected = t;
-                                    selected.tab.OnSelected(true);
+                                    selected.tab.OnTabChange(true);
                                     sel = true;
                                     EditorPrefs.SetString(GetWindowId(), t.tab.ToString());
                                 }
@@ -267,7 +287,7 @@ namespace mulova.unicore
                     t.OnEnable();
                     if (showAllTab)
                     {
-                        t.OnSelected(true);
+                        t.OnTabChange(true);
                     }
                 } catch (Exception ex)
                 {
@@ -285,7 +305,7 @@ namespace mulova.unicore
             tabs.RemoveAt(index);
             if (selected != null && selected.tab == tab)
             {
-                tab.OnSelected(false);
+                tab.OnTabChange(false);
                 if (index > 0)
                 {
                     selected = tabs[index - 1];
@@ -293,7 +313,7 @@ namespace mulova.unicore
                 {
                     selected = tabs[0];
                 }
-                selected.tab.OnSelected(true);
+                selected.tab.OnTabChange(true);
             }
             tab.OnDisable();
         }
@@ -305,6 +325,11 @@ namespace mulova.unicore
 		public void SetClosable(bool closable) {
 			this.closable = closable;
 		}
+
+        public EditorTab GetTab(int i)
+        {
+            return i < tabs.Count? tabs[i].tab: null;
+        }
 		
 		private class TabData {
 			public EditorTab tab;
