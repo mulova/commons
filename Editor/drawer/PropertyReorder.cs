@@ -218,7 +218,7 @@ namespace mulova.unicore
                     drawItem(item, r, index, isActive, isFocused);
                     if (dirty || check.changed)
                     {
-                        dirty = true;
+                        SetDirty();
                         drawer.index = index;
                     } else
                     {
