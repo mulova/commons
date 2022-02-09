@@ -18,6 +18,7 @@ namespace mulova.unicore
         public Color activeTabContentColor = Color.white;
         public Color inactiveTabBgColor = Color.black;
         public Color inactiveTabContentColor = Color.green;
+        public bool syncScroll;
 
         protected EditorTab activeTab
         {
@@ -159,17 +160,34 @@ namespace mulova.unicore
                         }
 						t.tab.OnHeaderGUI();
 						t.tab.ShowResult();
-						t.scrollPos = EditorGUILayout.BeginScrollView(t.scrollPos);
+                        var pos = EditorGUILayout.BeginScrollView(t.scrollPos);
+                        if (pos != t.scrollPos)
+                        {
+                            if (syncScroll)
+                            {
+                                foreach (var tab in tabs)
+                                {
+                                    tab.scrollPos = pos;
+                                }
+                            } else
+                            {
+                                t.scrollPos = pos;
+                            }
+                        }
 						t.tab.OnInspectorGUI();
 						EditorGUILayout.EndScrollView();
 						t.tab.OnFooterGUI();
 						EditorGUILayout.EndVertical();
+                        if (i != tabs.Count-1)
+                        {
+                            EditorGUILayout.LabelField("", GUI.skin.verticalSlider, GUILayout.Width(10), GUILayout.Height(position.height));
+                        }
                         if (isContextMenu)
                         {
                             selected.tab.AddContextMenu();
                         }
                     }
-					EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.EndHorizontal();
 				} else {
                     if (tabs.Count > 1)
                     {
@@ -333,7 +351,7 @@ namespace mulova.unicore
 		
 		private class TabData {
 			public EditorTab tab;
-			public Vector3 scrollPos;
+			public Vector2 scrollPos;
 			
 			public TabData(EditorTab t) {
 				this.tab = t;
