@@ -34,7 +34,15 @@ namespace UnityEngine.Ex
 			return new Vector3(v.x*scale, v.y*scale, v.z*scale);
 		}
 
-        public static bool ApproximatelyEquals(this Vector3 v1, Vector3 v2)
+		public static bool ApproximatelyEquals(this Vector4 v1, Vector4 v2)
+		{
+			return v1.x.ApproximatelyEquals(v2.x)
+				&& v1.y.ApproximatelyEquals(v2.y)
+				&& v1.z.ApproximatelyEquals(v2.z)
+				&& v1.w.ApproximatelyEquals(v2.w);
+		}
+
+		public static bool ApproximatelyEquals(this Vector3 v1, Vector3 v2)
         {
             return v1.x.ApproximatelyEquals(v2.x)
                 && v1.y.ApproximatelyEquals(v2.y)
