@@ -3,6 +3,7 @@ using System.Ex;
 using mulova.commons;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.SceneView;
 
 namespace mulova.unicore
 {
@@ -17,30 +18,75 @@ namespace mulova.unicore
         public Quaternion rot;
         public bool rotationLocked;
         public float fov;
+        public CameraSettings cameraSettings;
         #if UNITY_2018_1_OR_NEWER
         public SceneView.CameraMode camMode;
         #else
         public DrawCameraMode camMode;
         #endif
 
-        public void Collect()
+        public bool Collect()
         {
+            var changed = false;
             var view = EditorUtil.sceneView;
             if (view != null)
             {
-                size = view.size;
-                in2dMode = view.in2DMode;
-                rot = view.rotation;
-                pivot = view.pivot;
-                ortho = view.orthographic;
-                fov = ortho ? view.camera.orthographicSize : view.camera.fieldOfView;
-                rotationLocked = view.isRotationLocked;
-                #if UNITY_2018_1_OR_NEWER
-                camMode = view.cameraMode;
-                #else
-                camMode = view.renderMode;
-                #endif
+                if (size != view.size)
+                {
+                    size = view.size;
+                    changed = true;
+                }
+                if (in2dMode != view.in2DMode)
+                {
+                    in2dMode = view.in2DMode;
+                    changed = true;
+                }
+                if (rot != view.rotation)
+                {
+                    rot = view.rotation;
+                    changed = true;
+                }
+                if (pivot != view.pivot)
+                {
+                    pivot = view.pivot;
+                    changed = true;
+                }
+                if (ortho != view.orthographic)
+                {
+                    ortho = view.orthographic;
+                    changed = true;
+                }
+                if (cameraSettings != view.cameraSettings)
+                {
+                    cameraSettings = view.cameraSettings;
+                    changed = true;
+                }
+                var newFov = ortho ? view.camera.orthographicSize : view.camera.fieldOfView;
+                if (fov != newFov)
+                {
+                    fov = newFov;
+                    changed = true;
+                }
+                if (rotationLocked != view.isRotationLocked)
+                {
+                    rotationLocked = view.isRotationLocked;
+                    changed = true;
+                }
+#if UNITY_2018_1_OR_NEWER
+                if (camMode != view.cameraMode)
+                {
+                    camMode = view.cameraMode;
+                    changed = true;
+                }
+#else
+                if (camMode != view.renderMode)
+                {
+                    camMode = view.renderMode;
+                    changed = true;
+                }
+#endif
             }
+            return changed;
         }
         
         public bool valid
@@ -64,6 +110,7 @@ namespace mulova.unicore
                 }
                 view.pivot = pivot;
                 view.orthographic = ortho;
+                view.cameraSettings = cameraSettings;
             
                 if (!in2dMode)
                 {
@@ -96,7 +143,44 @@ namespace mulova.unicore
 
         public override string ToString()
         {
-            return id;
+            return $"{id}: size {size}  fov {fov}  pivot {pivot}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (UnityEngine.Object.ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj is SceneCamProperty that)
+            {
+                return id == that.id
+                    && in2dMode == that.in2dMode
+                    && size == that.size
+                    && ortho == that.ortho
+                    && pivot == that.pivot
+                    && rot == that.rot
+                    && rotationLocked == that.rotationLocked
+                    && fov == that.fov
+                    && camMode == that.camMode;
+            } else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            var h = id.GetHashCode();
+            h += h * 37 + in2dMode.GetHashCode();
+            h += h * 37 + size.GetHashCode();
+            h += h * 37 + ortho.GetHashCode();
+            h += h * 37 + pivot.GetHashCode();
+            h += h * 37 + rot.GetHashCode();
+            h += h * 37 + rotationLocked.GetHashCode();
+            h += h * 37 + fov.GetHashCode();
+            h += h * 37 + camMode.GetHashCode();
+            return h;
         }
     }
 }

@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEditor.SceneManagement;
-using UnityEditor.Experimental.SceneManagement;
-using System;
-using System.Threading.Tasks;
-
-#if UNITY_2021_2_OR_NEWER
+﻿#if UNITY_2021_2_OR_NEWER
 namespace UnityEditor.SceneManagement
 #else
 namespace UnityEditor.Experimental.SceneManagement
 #endif
 {
+    using System.Collections.Generic;
+    using UnityEditor.SceneManagement;
+    using UnityEditor.Experimental.SceneManagement;
+    using System;
+    using System.Threading.Tasks;
+
     public class PrefabStageCallbackManager : IDisposable
     {
 
