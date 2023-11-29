@@ -1,24 +1,23 @@
 ﻿//----------------------------------------------
-// Unity3D common libraries and editor tools
+// Unity3D UI switch library
 // License: The MIT License ( http://opensource.org/licenses/MIT )
-// Copyright © 2013- mulova@gmail.com
+// Copyright mulova@gmail.com
 //----------------------------------------------
-using System;
-using UnityEditor;
-using System.IO;
-using System.Text;
-using UnityEngine;
-using mulova.commons;
-using System.Collections.Generic;
-using Object = UnityEngine.Object;
-using UnityEditor.SceneManagement;
-using System.Text.Ex;
-using UnityEngine.SceneManagement;
-using System.IO.Ex;
 
 namespace mulova.unicore
 {
-	public static class EditorUtil
+	using System;
+	using UnityEditor;
+	using System.IO;
+	using System.Text;
+	using UnityEngine;
+	using System.Collections.Generic;
+	using Object = UnityEngine.Object;
+	using UnityEditor.SceneManagement;
+	using UnityEngine.SceneManagement;
+    using mulova.commons;
+
+    public static class EditorUtil
 	{
         public static SceneView sceneView {
             get {
@@ -51,7 +50,7 @@ namespace mulova.unicore
 		{
 			string saved = EditorPrefs.GetString(title, "Assets/");
 			string file = EditorUtility.OpenFilePanel(title, saved, ext);
-			if (!file.IsEmpty()) {
+			if (!string.IsNullOrEmpty(file)) {
 				EditorPrefs.SetString(title, file);
 			}
 			return file;
@@ -63,7 +62,7 @@ namespace mulova.unicore
 			string parent = PathUtil.GetParent(saved);
 			string dir = Path.GetFileName(saved);
 			string folder = EditorUtility.OpenFolderPanel(title, parent, dir);
-			if (!folder.IsEmpty()) {
+			if (!string.IsNullOrEmpty(folder)) {
 				EditorPrefs.SetString(title, folder);
 			}
 			return folder;
@@ -142,7 +141,7 @@ namespace mulova.unicore
         public static void SaveScene()
         {
             var currentScene = SceneManager.GetActiveScene().path;
-            if (!currentScene.IsEmpty() && currentScene != "Untitled")
+            if (!string.IsNullOrEmpty(currentScene) && currentScene != "Untitled")
             {
                 EditorSceneManager.SaveOpenScenes();
             }

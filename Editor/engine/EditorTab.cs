@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEngine;
-//using Rotorz.Games.Collections;
+﻿//----------------------------------------------
+// Unity3D UI switch library
+// License: The MIT License ( http://opensource.org/licenses/MIT )
+// Copyright mulova@gmail.com
+//----------------------------------------------
 
 namespace mulova.unicore
 {
+	using System;
+	using System.Collections.Generic;
+	using UnityEditor;
+	using UnityEditor.SceneManagement;
+	using UnityEngine;
+    using Object = UnityEngine.Object;
+
     public abstract class EditorTab {
 
         private object id;
@@ -14,6 +20,7 @@ namespace mulova.unicore
         private string warning = string.Empty;
         private string info = string.Empty;
         protected TabbedEditorWindow window { get; private set; }
+		protected Object targetObject => window.serializedObject?.targetObject;
 
         public EditorTab(TabbedEditorWindow window)
         {
@@ -55,7 +62,7 @@ namespace mulova.unicore
 		/// </summary>
 		public abstract void OnFocus(bool focus);
 		public virtual void OnInspectorUpdate() {}
-		public virtual void OnSelectionChange() {}
+		public virtual void OnSelectionChange(SerializedObject so) {}
 		
 		protected virtual void Repaint() {
 			window.Repaint();

@@ -1,13 +1,14 @@
 ﻿//----------------------------------------------
-// Unity3D common libraries and editor tools
+// Unity3D UI switch library
 // License: The MIT License ( http://opensource.org/licenses/MIT )
-// Copyright © 2013- mulova@gmail.com
+// Copyright mulova@gmail.com
 //----------------------------------------------
-using System;
-using UnityEngine;
 
 namespace mulova.unicore
 {
+    using System;
+    using UnityEngine;
+
     public class EnableScope : IDisposable
     {
         private bool enabled;

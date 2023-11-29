@@ -1,19 +1,19 @@
-﻿using System;
-using UnityEditor;
-using Object = UnityEngine.Object;
-using UnityEngine;
-using System.IO;
-using mulova.commons;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Text.Ex;
-using System.Collections.Generic.Ex;
-using System.Ex;
-using UnityEngine.Ex;
-using System.Reflection;
-
-namespace mulova.unicore
+﻿namespace mulova.unicore
 {
+    using System;
+    using UnityEditor;
+    using Object = UnityEngine.Object;
+    using UnityEngine;
+    using System.IO;
+    using mulova.commons;
+    using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+    using System.Text.Ex;
+    using System.Collections.Generic.Ex;
+    using System.Ex;
+    using UnityEngine.Ex;
+    using System.Reflection;
+
     public static class TextureUtil
     {
         public static string IMAGE_MAGICK

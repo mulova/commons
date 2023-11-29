@@ -1,31 +1,20 @@
 ﻿//----------------------------------------------
-// Unity3D common libraries and editor tools
+// Unity3D UI switch library
 // License: The MIT License ( http://opensource.org/licenses/MIT )
-// Copyright © 2013- mulova@gmail.com
+// Copyright mulova@gmail.com
 //----------------------------------------------
-using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using Object = UnityEngine.Object;
-using mulova.commons;
-using System.Text.Ex;
-using System.Ex;
-using UnityEngine.Ex;
-
 namespace mulova.unicore
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.Ex;
+    using Object = UnityEngine.Object;
+
     public partial class EditorGUIEx
     {
         public static bool PopupNullable<T>(Rect bound, string label, ref T selection, IList<T> items)
-        {
-            T sel = selection;
-            bool changed = PopupNullable<T>(bound, label, ref sel, items, ObjToString.ScenePathToString);
-            selection = sel;
-            return changed;
-        }
-
-        public static bool PopupNullable<T>(Rect bound, string label, ref T selection, IList<T> items, ToStr toString)
         {
             if (items.Count == 0)
             {
@@ -61,7 +50,7 @@ namespace mulova.unicore
             str[0] = "-";
             for (int i = 1; i <= items.Count; i++)
             {
-                str[i] = toString(items[i - 1]);
+                str[i] = items[i - 1]?.ToString() ?? "-";
                 if (object.Equals(items[i - 1], selection))
                 {
                     index = i;
@@ -97,7 +86,7 @@ namespace mulova.unicore
             EditorGUI.LabelField(bounds[0], label);
             TextField(bounds[1], null, ref filter, EditorStyles.toolbarTextField);
             IList<T> filtered = null;
-            if (!filter.IsEmpty())
+            if (!string.IsNullOrEmpty(filter))
             {
                 filtered = new List<T>(items.Count);
                 foreach (T i in items)
@@ -193,40 +182,35 @@ namespace mulova.unicore
 
         public static bool PopupEnum<T>(Rect bound, string label, ref T selection, IList<T> list) where T : struct, IComparable, IConvertible, IFormattable
         {
-            return Popup<T>(bound, label, ref selection, list, ObjToString.DefaultToString, null);
+            return Popup<T>(bound, label, ref selection, list, null);
         }
 
         public static bool PopupEnum<T>(Rect bound, string label, ref T selection) where T : struct, IComparable, IConvertible, IFormattable
         {
-            return Popup<T>(bound, label, ref selection, EnumUtil.Values<T>(), ObjToString.DefaultToString, null);
+            return Popup<T>(bound, label, ref selection, (T[])Enum.GetValues(typeof(T)), null);
         }
 
         public static bool PopupEnum<T>(Rect bound, string label, ref T selection, GUIStyle style) where T : struct, IComparable, IConvertible, IFormattable
         {
-            bool ret = Popup<T>(bound, label, ref selection, EnumUtil.Values<T>(), ObjToString.DefaultToString, style);
+            bool ret = Popup<T>(bound, label, ref selection, (T[])Enum.GetValues(typeof(T)), style);
             return ret;
         }
 
         public static bool Popup<T>(Rect bound, ref T selection, IList<T> items)
         {
-            bool ret = Popup<T>(bound, null, ref selection, items, ObjToString.DefaultToString);
+            bool ret = Popup<T>(bound, null, ref selection, items);
             return ret;
         }
 
         public static bool Popup<T>(Rect bound, string label, ref T selection, IList<T> items)
         {
-            return Popup<T>(bound, label, ref selection, items, ObjToString.DefaultToString);
-        }
-
-        public static bool Popup<T>(Rect bound, string label, ref T selection, IList<T> items, ToStr toString)
-        {
-            return Popup<T>(bound, label, ref selection, items, toString, null);
+            return Popup<T>(bound, label, ref selection, items, null);
         }
         /**
         * @param label null이면 출력하지 않는다.
         * @return 선택이 되었으면 true
         */
-        public static bool Popup<T>(Rect bound, string label, ref T selection, IList<T> items, ToStr toString, GUIStyle style)
+        public static bool Popup<T>(Rect bound, string label, ref T selection, IList<T> items, GUIStyle style)
         {
             if (items.Count == 0)
             {
@@ -236,7 +220,7 @@ namespace mulova.unicore
             string[] str = new string[items.Count];
             for (int i = 0; i < items.Count; i++)
             {
-                str[i] = toString(items[i]);
+                str[i] = items[i]?.ToString() ?? "-";
                 if (object.ReferenceEquals(items[i], selection) || object.Equals(items[i], selection))
                 {
                     index = i;
@@ -525,8 +509,8 @@ namespace mulova.unicore
         public static bool GUIDField<T>(string label, ref string guid, params GUILayoutOption[] options) where T : Object
         {
             T o = null;
-            string assetPath = !guid.IsEmpty() ? AssetDatabase.GUIDToAssetPath(guid) : null;
-            if (!assetPath.IsEmpty())
+            string assetPath = !string.IsNullOrEmpty(guid) ? AssetDatabase.GUIDToAssetPath(guid) : null;
+            if (!string.IsNullOrEmpty(assetPath))
             {
                 o = AssetDatabase.LoadAssetAtPath<T>(assetPath);
             }
