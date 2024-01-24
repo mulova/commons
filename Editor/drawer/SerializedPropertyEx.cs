@@ -58,7 +58,8 @@ namespace UnityEditor
                 case SerializedPropertyType.BoundsInt:
                     return p.boundsIntValue;
                 default:
-                    throw new Exception("Unreachable");
+                    return default;
+                    //throw new Exception("Unreachable");
             }
         }
     }
